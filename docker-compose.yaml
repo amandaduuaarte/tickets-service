@@ -1,0 +1,11 @@
+version: "3"
+services:
+  tickets-db:
+    image: mysql
+    container_name: tickets-db
+    restart: always
+    environment:
+      - MYSQL_DATABASE=tickets-db
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 8080:8080
