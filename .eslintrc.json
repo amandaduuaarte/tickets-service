@@ -1,19 +1,41 @@
 {
-     "env": {
-         "es2021": true,
-         "node": true
-     },
-     "extends": "airbnb-base",
-     "parserOptions": {
-         "ecmaVersion": "latest",
-         "sourceType": "module"
-     },
-     "rules": {
-         "semi": ["error", "always"],
-         "quotes": ["error", "double"],
-         "prefer-destructuring": 0,
-         "no-console": 0,
-         "class-methods-use-this": 0,
-         "import/extensions": 0
-     }
- }
+    "env": {
+      "es2022": true,
+      "node": true
+    },
+    "extends": [
+      "airbnb-base",
+      "plugin:prettier/recommended",
+      "plugin:import/typescript",
+      "plugin:@typescript-eslint/recommended",
+      "prettier",
+    ],
+    "parser": "@typescript-eslint/parser", // Usa o parser do TypeScript
+    "parserOptions": {
+      "ecmaVersion": 2022,
+      "sourceType": "module"
+    },
+    "plugins": [
+      "@typescript-eslint" // Habilita o plugin do TypeScript
+    ],
+    "rules": {
+      "class-methods-use-this": 0,
+      "no-useless-constructor": 0,
+      "@typescript-eslint/no-useless-constructor": "error", // Aplica a regra de evitar construtores vazios em classes TypeScript
+      "import/extensions": [
+        "error",
+        "ignorePackages", // Ignora as extensões de arquivos para pacotes
+        {
+          "ts": "never" // Para arquivos TypeScript, não é necessário incluir a extensão
+        }
+      ]
+    },
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [".js", ".jsx", ".ts", ".tsx"] // Resolve arquivos .ts e .tsx ao importar
+        }
+      }
+    }
+  }
+  
