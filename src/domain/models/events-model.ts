@@ -1,4 +1,4 @@
-import { OwnerModel } from "../../owners/models/owner-model";
+import { OwnerModel } from "@/domain/models/owner-model";
 
 type EventsReservationModel = {
     row: number;

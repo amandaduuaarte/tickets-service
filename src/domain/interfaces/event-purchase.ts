@@ -4,7 +4,7 @@ export type Contact = {
 }
 
 export type EventDetails = {
-    row: number;
+    row: number | string;
     seat: number;
 }
 
