@@ -1,16 +1,22 @@
-import { Request, Response } from "express";
 import { AuthService } from "@/domain/services/auth-service";
 
 import { Controller } from "../interfaces/controller";
-import { Responsebody } from "../interfaces";
+
+import { BAD_REQUEST } from "../constants";
 
 export class AuthController implements Controller {
-    public async handleRequest(request: any, response: any){
-        const authservice = new AuthService(); 
-        const content = await authservice.run(request);
+    public async handleRequest(request: any, response: any) {
+        try {
+            const authservice = new AuthService();
+            const content = await authservice.run(request);
+    
+            return response.status(200).send(content);
 
-        return response.status(200).send({
-            accessToken: content
-        });
-     };
+        } catch (error: any) {
+            return response.status(BAD_REQUEST).send({
+                code: BAD_REQUEST,
+                message: error.message
+            });
+        }
+    }
 }

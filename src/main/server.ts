@@ -1,7 +1,9 @@
 import express from 'express';
 import { Connection } from '@/infra/knex/config/connection';
 import { eventPurchaseRouter, authRoute } from './routes';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app = express();
 const port = 3000;
 const connection = new Connection();
