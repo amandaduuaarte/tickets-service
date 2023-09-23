@@ -1,5 +1,7 @@
-import { Response, Request } from './index';
+import { Request, Response } from "express";
+
+import { Responsebody } from "./index";
 
 export interface Controller {
-    handleRequest:(request: Request) => Promise<Response>;
+    handleRequest:(request: Request, response: Response ) => Promise<Responsebody>;
 }

@@ -1,9 +1,9 @@
 import { EventPurchase } from "@/domain/interfaces";
-import { Controller, Response } from "../interfaces";
+import { Controller, Responsebody } from "../interfaces";
 
 export class EventPurchaseController implements Controller {
 
-    public async handleRequest({ data }: EventPurchase | any): Promise<Response | any> {
+    public async handleRequest({ data }: EventPurchase | any): Promise<Responsebody | any> {
         console.info('[Event-purchase-controller]:', data);
         try {
             return data;
