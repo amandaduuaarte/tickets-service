@@ -11,29 +11,31 @@ export class AuthService implements Auth {
 
     async run(params: Auth.AuthParams): Promise<Auth.AuthReturn> {
         const { clientId } = params.body;
-
         this.validate(clientId);
-        console.log(`[Auth-Service]: Client ID:${clientId} validate successfully!`);
+        console.info(`[Auth-Service]: clientid was validate. client:${clientId}.`);
 
         await this.findClientId(clientId);
         console.info(`[Auth-Service]: clientid was found. client:${clientId}.`);
 
-       await this.generateClientToken(clientId);
+      const accessToken =  await this.generateClientToken(clientId);
         
         return {
             accessToken: {
-                clientId
+                clientId: accessToken
             }
         }
     }
 
-    private validate(clientId: string) {
+    private validate(clientId: string | string[]): void {
         const startsWith = 'mobile';
 
-        if (!clientId.startsWith(startsWith)) {
-            console.error(`[Auth-Service]: Invalid client id: ${clientId}`);
-            throw new BadRequestException('O client ID é inválido.', 400);
+        if (typeof (clientId) === 'string') {
+            if (!clientId.startsWith(startsWith)) {
+                console.error(`[Auth-Service]: Invalid client id: ${clientId}`);
+                throw new BadRequestException('O client ID é inválido.', 400);
+            }
         }
+       
     }
 
     private async findClientId (clientId: string) {
