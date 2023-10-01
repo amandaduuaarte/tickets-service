@@ -3,14 +3,14 @@ import { EventPurchase } from '../interfaces/event-purchase-service'
 import { EventPurchaseValidator } from '../schemas/event-purchase-schema'
 import { BAD_REQUEST } from '@/application/constants'
 import { EventRepository } from '@/infra/knex/repositories/events/events-repository'
-import { error, success } from '@/application/utils/http'
+import { error, noContent, success } from '@/application/utils/http'
 
 export class EventPurchaseService implements EventPurchase {
     constructor(private readonly eventRepository: EventRepository) {}
 
     async run(
         params: EventPurchase.EventPurchaseParams,
-    ): Promise<EventPurchase.EventPurchaseReturn> {
+    ): Promise<EventPurchase.EventPurchaseReturn | void> {
         try {
             if (!params) {
                 console.error(`[EventPurchase-Service]: Params are required.`)
@@ -23,7 +23,7 @@ export class EventPurchaseService implements EventPurchase {
             await this.validate(params)
             await this.fullTicketAvailability(params)
             await this.ticketAvailabilityForArea(params)
-            return success({ message: 'Tudo certo!' })
+            return noContent();
         } catch (err: any) {
             return error(err.message)
         }
@@ -111,4 +111,7 @@ export class EventPurchaseService implements EventPurchase {
             throw new BadRequestException(err.message, BAD_REQUEST)
         }
     }
+
+    // atualizar a quantidade de ingressos (nesse)
+    // publicar no rabbit (acho que posso fazer isso em outro arquivo)
 }

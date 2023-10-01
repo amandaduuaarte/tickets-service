@@ -27,7 +27,7 @@ export class AuthService implements Auth {
     }
 
     private validate(clientId: string | string[]): void {
-        const startsWith = 'mobile';
+        const startsWith = 'MSInitialService';
 
         if (typeof (clientId) === 'string') {
             if (!clientId.startsWith(startsWith)) {
@@ -48,7 +48,7 @@ export class AuthService implements Auth {
     private async generateClientToken(clientId: string): Promise<string> {
         const env = process.env;
 
-        const accessToken = await Jwt.sign({ clientId }, env.API_SECRET || '', { expiresIn: "7d" });
+        const accessToken = await Jwt.sign({ clientId }, env.API_SECRET || '', { expiresIn: "10y" });
         console.info(`[Auth-Service]: access token was genereted!`);
         return accessToken;
     }

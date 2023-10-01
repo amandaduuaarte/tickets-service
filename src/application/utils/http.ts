@@ -5,10 +5,14 @@ interface ReturnContent {
     body: any
 }
 
+interface NoContent {
+    code: number
+}
+
 export const success = (data: any): ReturnContent => {
     return {
         code: SUCCESS,
-        body: data,
+        body: data ,
     }
 }
 
@@ -17,4 +21,8 @@ export const error = (data: any): ReturnContent => {
         code: BAD_REQUEST,
         body: data,
     }
+}
+
+export const noContent = (): void => {
+    return;
 }

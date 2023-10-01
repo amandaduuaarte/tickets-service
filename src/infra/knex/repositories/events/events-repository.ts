@@ -22,4 +22,13 @@ export class EventRepository implements EventRepositoryInterface {
             throw new Error('O evento não pode ser validado.')
         }
     }
+
+    // async ticketBooking(eventId: string, eventDetails: any) {
+    //     const bdName = `event_${eventId}`
+    //     const config = new Connection().db(bdName);
+    //     const quantity = await config.select('tickets_quantity');
+    //     const newQuantity = quantity - eventDetails.quantity;
+    //     const content = await config.update({ ['tickets_quantity']: quantity -  })
+    //     return ''
+    // }
 }

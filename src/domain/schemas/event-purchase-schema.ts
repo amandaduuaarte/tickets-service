@@ -17,7 +17,7 @@ export const EventPurchaseValidator = yup.object().shape({
                 phoneNumber: yup
                     .string()
                     .required('É necessário informar o contato do comprador.'),
-                email: yup.string().email('Envie um email válido.'),
+                email: yup.string().email('Envie um email válido.').required('É necessário informar o email do comprador.'),
             }),
             quantity: yup
                 .number()

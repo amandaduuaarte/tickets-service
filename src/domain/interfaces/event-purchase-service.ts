@@ -1,7 +1,7 @@
 export interface EventPurchase {
     run(
         params: EventPurchase.EventPurchaseParams,
-    ): Promise<EventPurchase.EventPurchaseReturn>
+    ): Promise<EventPurchase.EventPurchaseReturn | void>
 }
 
 export namespace EventPurchase {
@@ -22,6 +22,6 @@ export namespace EventPurchase {
         body: {
             code: number
             message: string
-        }
+        };
     }
 }
