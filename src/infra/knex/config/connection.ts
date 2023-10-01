@@ -8,7 +8,7 @@ export class Connection {
     }
 
     public async validateConnection() {
-        this.db('events').then((response) => { 
+        this.db('event_01').then((response) => { 
             if (response) {
                 console.info('[Ticket-service]-Connection with database was successfully!');
             }

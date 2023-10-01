@@ -1,5 +1,3 @@
-import { OwnerModel } from "@/domain/models/owner-model";
-
 type EventsReservationModel = {
     row: number;
     seat: number;
@@ -12,6 +10,8 @@ export type EventsModel = {
     type: string;
     description: string;
     place: string;
-    owner: OwnerModel;
+    owner: string;
+    event_config: any;
+    tickets_quantity: number;
     hasReservation?: EventsReservationModel;
 }

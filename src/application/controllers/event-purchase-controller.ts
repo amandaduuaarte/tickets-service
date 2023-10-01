@@ -1,15 +1,24 @@
-import { EventPurchase } from "@/domain/interfaces";
-import { Controller, Responsebody } from "../interfaces";
+import { Controller, Responsebody } from '../interfaces'
+import { success, error } from '../utils/http'
+import { EventPurchaseService } from '@/domain/services'
+import { EventRepository } from '@/infra/knex/repositories/events/events-repository'
 
 export class EventPurchaseController implements Controller {
+    public async handleRequest(
+        req: any,
+        res: any,
+    ): Promise<Responsebody | any> {
+        console.info('[Event-purchase-controller]:', req.body)
 
-    public async handleRequest({ data }: EventPurchase | any): Promise<Responsebody | any> {
-        console.info('[Event-purchase-controller]:', data);
         try {
-            return data;
-        } catch (error: any) {
-            console.error('[Event-purchase-controller]:', error);
+            const eventPurchaseService = new EventPurchaseService(
+                new EventRepository(),
+            )
+            const content = await eventPurchaseService.run(req.body)
+            return res.send(content)
+        } catch (err: any) {
+            console.error('[Event-purchase-controller]:', error)
+            return
         }
-      
     }
 }

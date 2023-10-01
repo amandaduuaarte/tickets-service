@@ -1,9 +1,8 @@
-import { AuthService } from "@/domain/services/auth-service";
+import { AuthService } from "@/domain/services";
 
 import { Controller } from "../interfaces/controller";
-
-import { BAD_REQUEST } from "../constants";
 import { ConfigRepository } from "@/infra/knex/repositories/config/config-repository";
+import { error, success } from "../utils/http";
 
 export class AuthController implements Controller {
     public async handleRequest(request: any, response: any) {
@@ -11,13 +10,10 @@ export class AuthController implements Controller {
             const authservice = new AuthService(new ConfigRepository());
             const content = await authservice.run(request);
     
-            return response.status(200).send(content);
+            return response.send(success(content));
 
-        } catch (error: any) {
-            return response.status(BAD_REQUEST).send({
-                code: BAD_REQUEST,
-                message: error.message
-            });
+        } catch (err: any) {
+            return response.send(error({ message: err.message}));
         }
     }
 }
