@@ -12,6 +12,7 @@ export class EventPurchaseService implements EventPurchase {
         params: EventPurchase.EventPurchaseParams,
     ): Promise<EventPurchase.EventPurchaseReturn | void> {
         try {
+            const { eventId, eventDetails, contact } = params;
             if (!params) {
                 console.error(`[EventPurchase-Service]: Params are required.`)
                 throw new BadRequestException(
@@ -21,8 +22,9 @@ export class EventPurchaseService implements EventPurchase {
             }
 
             await this.validate(params)
-            await this.fullTicketAvailability(params)
-            await this.ticketAvailabilityForArea(params)
+            await this.fullTicketAvailability({ eventId, eventDetails})
+            await this.ticketAvailabilityForArea({ eventId, eventDetails })
+            await this.updateQuantity({ eventId, eventDetails })
             return noContent();
         } catch (err: any) {
             return error(err.message)
@@ -47,15 +49,17 @@ export class EventPurchaseService implements EventPurchase {
     }
 
     async fullTicketAvailability(
-        params: EventPurchase.EventPurchaseParams,
+        params: {eventId: string, eventDetails: { area?: string
+            quantity: number}},
     ): Promise<void> {
         try {
+            const { quantity } = params.eventDetails;
             const event = await this.eventRepository.findQuantityByEventId(
                 params.eventId,
             )
-            if (event.tickets_quantity < params.quantity) {
+            if (event.tickets_quantity < quantity) {
                 console.log(
-                    `[EventPurchase-Service]: Quantity is not valid for this event: ${params.quantity}.`,
+                    `[EventPurchase-Service]: Quantity is not valid for this event: ${quantity}.`,
                 )
                 throw new BadRequestException(
                     'Infelizmente a quantidade de ingressos é inferior a quantidade solicitada na sua compra.',
@@ -70,17 +74,18 @@ export class EventPurchaseService implements EventPurchase {
         }
     }
     async ticketAvailabilityForArea(
-        params: EventPurchase.EventPurchaseParams,
+        params: {eventId: string, eventDetails: { area?: string
+            quantity: number}},
     ): Promise<void> {
         try {
-            if (!params.eventDetails) {
+            if (!params.eventDetails.area) {
                 return
             }
             const event = await this.eventRepository.findQuantityByEventId(
                 params.eventId,
             )
             const selectedArea = params.eventDetails.area
-            const selectedQuantity = params.eventDetails.quantityForArea
+            const selectedQuantity = params.eventDetails.quantity
             const areaFound = event.event_config.areas.find(
                 (area) => area.name === selectedArea,
             )
@@ -112,6 +117,10 @@ export class EventPurchaseService implements EventPurchase {
         }
     }
 
+    async updateQuantity(params: {eventId:string, eventDetails: { area?: string
+        quantity: number}}): Promise<void> {
+        await this.eventRepository.ticketBooking(params.eventId, params.eventDetails);
+    }
     // atualizar a quantidade de ingressos (nesse)
     // publicar no rabbit (acho que posso fazer isso em outro arquivo)
 }

@@ -8,14 +8,13 @@ export namespace EventPurchase {
     export type EventPurchaseParams = {
         eventId: string
         ownerName: string
-        quantity: number
         contact: {
             email: string
             phoneNumber: number
         }
-        eventDetails?: {
-            area: string
-            quantityForArea: number
+        eventDetails: {
+            area?: string
+            quantity: number
         }
     }
     export type EventPurchaseReturn = {

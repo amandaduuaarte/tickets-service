@@ -23,12 +23,21 @@ export class EventRepository implements EventRepositoryInterface {
         }
     }
 
-    // async ticketBooking(eventId: string, eventDetails: any) {
-    //     const bdName = `event_${eventId}`
-    //     const config = new Connection().db(bdName);
-    //     const quantity = await config.select('tickets_quantity');
-    //     const newQuantity = quantity - eventDetails.quantity;
-    //     const content = await config.update({ ['tickets_quantity']: quantity -  })
-    //     return ''
-    // }
+    async ticketBooking(eventId: string, eventDetails: any) {
+        try {
+            const bdName = `event_${eventId}`
+            const config = new Connection().db(bdName)
+            const quantity = await config.select('tickets_quantity')
+            const newQuantity = Number(quantity) - eventDetails.quantity
+            const content = await config.update({
+                ['tickets_quantity']: newQuantity,
+            })
+            console.log('aquiiiii', content)
+        } catch (error: any) {
+            console.error(
+                `[Event-ticketBooking-Repository]: ${error.message}`,
+            )
+            throw new Error('A compra não pode ser finalizada. Tente novamente')
+        }
+    }
 }

@@ -19,9 +19,12 @@ export const EventPurchaseValidator = yup.object().shape({
                     .required('É necessário informar o contato do comprador.'),
                 email: yup.string().email('Envie um email válido.').required('É necessário informar o email do comprador.'),
             }),
-            quantity: yup
+            eventDetails: yup.object().shape({
+                quantity: yup
                 .number()
-                .required('É necessário informar a quantidade de ingressos'),
+                    .required('É necessário informar a quantidade de ingressos'),
+                area: yup.string(),
+            })     
         })
         .required(
             'É necessário informar os parametros para concluir a compra.',
