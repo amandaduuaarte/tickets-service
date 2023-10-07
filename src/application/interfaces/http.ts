@@ -1,4 +1,4 @@
 export type Responsebody = {
-    message?: string;
-    content: any;
-}
+  message?: string;
+  content: any;
+};

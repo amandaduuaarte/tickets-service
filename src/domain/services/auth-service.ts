@@ -3,7 +3,7 @@ import { Auth } from "../interfaces";
 import Jwt from "jsonwebtoken";
 import { ConfigRepository } from "@/infra/knex/repositories/config/config-repository";
 
-export class AuthService implements Auth {
+export class AuthService implements AuthService {
   constructor(private readonly configRepository: ConfigRepository) {
     this.configRepository = configRepository;
   }
