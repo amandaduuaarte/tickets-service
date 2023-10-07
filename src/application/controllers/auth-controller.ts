@@ -5,15 +5,14 @@ import { ConfigRepository } from "@/infra/knex/repositories/config/config-reposi
 import { error, success } from "../utils/http";
 
 export class AuthController implements Controller {
-    public async handleRequest(request: any, response: any) {
-        try {
-            const authservice = new AuthService(new ConfigRepository());
-            const content = await authservice.run(request);
-    
-            return response.send(success(content));
+  public async handleRequest(request: any, response: any) {
+    try {
+      const authservice = new AuthService(new ConfigRepository());
+      const content = await authservice.run(request);
 
-        } catch (err: any) {
-            return response.send(error({ message: err.message}));
-        }
+      return response.send(success(content));
+    } catch (err: any) {
+      return response.send(error({ message: err.message }));
     }
+  }
 }

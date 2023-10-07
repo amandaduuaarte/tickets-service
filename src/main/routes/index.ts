@@ -1,2 +1,2 @@
-export * from './auth-route';
-export * from './event-purchase-route';
+export * from "./auth-route";
+export * from "./event-purchase-route";

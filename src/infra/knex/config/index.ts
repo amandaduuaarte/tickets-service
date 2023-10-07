@@ -1,2 +1,2 @@
-export * from './connection';
-export * from './knexfile';
+export * from "./connection";
+export * from "./knexfile";

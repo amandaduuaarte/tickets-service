@@ -1,11 +1,10 @@
-
 type OwnerContatcModel = {
-    phoneNumber: string;
-    email: string;
-}
+  phoneNumber: string;
+  email: string;
+};
 
 export type OwnerModel = {
-    id: string;
-    contact: OwnerContatcModel;
-    name: string;
-}
+  id: string;
+  contact: OwnerContatcModel;
+  name: string;
+};

@@ -8,5 +8,5 @@ export type findQuantityByEventIdReturn = {
 
 export interface EventRepositoryInterface {
     findQuantityByEventId(eventId: string): Promise<findQuantityByEventIdReturn>
-    ticketBooking(eventId: string, eventDetails: Array<any>): Promise<void>
+    ticketBooking(eventId: string, eventDetails: {area?: string, quantity: number}): Promise<void>
 }

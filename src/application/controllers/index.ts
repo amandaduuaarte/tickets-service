@@ -1,1 +1,1 @@
-export * from './event-purchase-controller';
+export * from "./event-purchase-controller";
