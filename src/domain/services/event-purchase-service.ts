@@ -3,7 +3,7 @@ import { EventPurchase } from "../interfaces/event-purchase-service";
 import { EventPurchaseValidator } from "../schemas/event-purchase-schema";
 import { BAD_REQUEST } from "@/application/constants";
 import { EventRepository } from "@/infra/knex/repositories/events/events-repository";
-import { error, noContent } from "@/application/utils/http";
+import { error, success } from "@/application/utils/http";
 
 export class EventPurchaseService implements EventPurchaseService {
   constructor(readonly eventRepository: EventRepository) {
@@ -28,7 +28,9 @@ export class EventPurchaseService implements EventPurchaseService {
       await this.ticketAvailabilityForArea({ eventId, eventDetails });
       await this.updateQuantity({ eventId, eventDetails });
 
-      return noContent();
+      return success(
+        "Tudo certo com a sua compra! Em breve você recebera um email com o seu ingresso.",
+      );
     } catch (err: any) {
       return error(err.message);
     }

@@ -18,6 +18,7 @@ export namespace EventPurchase {
       quantity: number;
     };
   };
+
   export type EventPurchaseReturn = {
     body: {
       code: number;
