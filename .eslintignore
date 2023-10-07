@@ -1,3 +1,4 @@
-/*.js
-node_modules
 dist
+.eslintrc.js
+.prettierrc.js
+tsconfig.json
