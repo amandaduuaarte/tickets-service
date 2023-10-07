@@ -1,2 +1,2 @@
-export * from './config-repository';
-export * from './events-repository';
+export * from "./config-repository";
+export * from "./events-repository";

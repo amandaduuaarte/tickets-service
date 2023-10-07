@@ -4,7 +4,9 @@ import Jwt from "jsonwebtoken";
 import { ConfigRepository } from "@/infra/knex/repositories/config/config-repository";
 
 export class AuthService implements Auth {
-  constructor(private readonly configRepository: ConfigRepository) {}
+  constructor(private readonly configRepository: ConfigRepository) {
+    this.configRepository = configRepository;
+  }
 
   async run(params: Auth.AuthParams): Promise<Auth.AuthReturn> {
     const { clientId } = params.body;

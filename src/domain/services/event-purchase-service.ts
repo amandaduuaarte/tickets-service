@@ -5,7 +5,7 @@ import { BAD_REQUEST } from "@/application/constants";
 import { EventRepository } from "@/infra/knex/repositories/events/events-repository";
 import { error, noContent } from "@/application/utils/http";
 
-export class EventPurchaseService implements EventPurchase {
+export class EventPurchaseService implements EventPurchaseService {
   constructor(readonly eventRepository: EventRepository) {
     this.eventRepository = eventRepository;
   }
@@ -26,6 +26,8 @@ export class EventPurchaseService implements EventPurchase {
       await this.validate(params);
       await this.fullTicketAvailability({ eventId, eventDetails });
       await this.ticketAvailabilityForArea({ eventId, eventDetails });
+      await this.updateQuantity({ eventId, eventDetails });
+
       return noContent();
     } catch (err: any) {
       return error(err.message);
@@ -51,7 +53,7 @@ export class EventPurchaseService implements EventPurchase {
 
   async fullTicketAvailability(params: {
     eventId: string;
-    eventDetails: { area?: string; quantity: number };
+    eventDetails: { area: string; quantity: number };
   }): Promise<void> {
     try {
       const { quantity } = params.eventDetails;
@@ -76,22 +78,21 @@ export class EventPurchaseService implements EventPurchase {
   }
   async ticketAvailabilityForArea(params: {
     eventId: string;
-    eventDetails: { area?: string; quantity: number };
+    eventDetails: { area: string; quantity: number };
   }): Promise<void> {
     try {
       if (!params.eventDetails.area) {
         return;
       }
-      const event = await this.eventRepository.findQuantityByEventId(
-        params.eventId,
-      );
       const selectedArea = params.eventDetails.area;
       const selectedQuantity = params.eventDetails.quantity;
-      const areaFound = event.event_config.areas.find(
-        (area) => area.name === selectedArea,
+
+      const eventFound = await this.eventRepository.findQuantityByArea(
+        params.eventId,
+        selectedArea,
       );
 
-      if (!areaFound) {
+      if (!eventFound) {
         console.error(
           `[EventPurchase-Service]: Event area is invalid: ${params.eventDetails.area}.`,
         );
@@ -101,7 +102,7 @@ export class EventPurchaseService implements EventPurchase {
         );
       }
 
-      if (selectedQuantity > areaFound.quantity) {
+      if (selectedQuantity > eventFound.area) {
         console.info(
           `[EventPurchase-Service]: Quantity is not valid for this area: ${selectedQuantity}.`,
         );
@@ -120,15 +121,19 @@ export class EventPurchaseService implements EventPurchase {
 
   async updateQuantity(params: {
     eventId: string;
-    eventDetails: { area?: string; quantity: number };
+    eventDetails: { area: string; quantity: number };
   }): Promise<void> {
-    console.info(`[EventPurchase-Service]: Updating the total quantity value.`);
-    await this.eventRepository.ticketBooking(
-      params.eventId,
-      params.eventDetails,
-    );
+    try {
+      console.info(
+        `[EventPurchase-Service]: Updating the total quantity value.`,
+      );
+      await this.eventRepository.ticketBooking(
+        params.eventId,
+        params.eventDetails,
+      );
+    } catch (err: any) {
+      throw new BadRequestException(err.message, BAD_REQUEST);
+    }
   }
-  // atualizar a quantidade de ingressos (nesse) ou posso fazer um outro arquivo com outra classe que vai dar
-  // um extends nessa e pegar as props daqui, só para cuidar disso de quantidade.
   // publicar no rabbit (acho que posso fazer isso em outro arquivo)
 }
