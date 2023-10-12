@@ -12,12 +12,6 @@ export type findQuantityByAreaReturn = {
 
 export interface EventRepositoryInterface {
   findQuantityByEventId(eventId: string): Promise<findQuantityByEventIdReturn>;
-  ticketBooking(
-    eventId: string,
-    eventDetails: { area: string; quantity: number },
-  ): Promise<void>;
-  findQuantityByArea(
-    eventId: string,
-    area: string,
-  ): Promise<findQuantityByAreaReturn>;
+  ticketBooking(eventId: string, eventDetails: { area: string; quantity: number }): Promise<void>;
+  findQuantityByArea(eventId: string, area: string): Promise<findQuantityByAreaReturn>;
 }
