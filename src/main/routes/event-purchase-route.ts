@@ -5,8 +5,4 @@ import authMiddleware from "../middlewares/auth-middleware";
 export const eventPurchaseRouter = Router();
 const eventPurchaseController = new EventPurchaseController();
 
-eventPurchaseRouter.post(
-  "/event-purchase",
-  authMiddleware.handleRequest,
-  eventPurchaseController.handleRequest,
-);
+eventPurchaseRouter.post("/event-purchase", authMiddleware.handleRequest, eventPurchaseController.handleRequest);

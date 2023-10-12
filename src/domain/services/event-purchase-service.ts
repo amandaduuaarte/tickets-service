@@ -10,17 +10,12 @@ export class EventPurchaseService implements EventPurchaseService {
     this.eventRepository = eventRepository;
   }
 
-  async run(
-    params: EventPurchase.EventPurchaseParams,
-  ): Promise<EventPurchase.EventPurchaseReturn | void> {
+  async run(params: EventPurchase.EventPurchaseParams): Promise<EventPurchase.EventPurchaseReturn | void> {
     try {
       const { eventId, eventDetails } = params;
       if (!params) {
         console.error(`[EventPurchase-Service]: Params are required.`);
-        throw new BadRequestException(
-          "Os parametros são inválidos.",
-          BAD_REQUEST,
-        );
+        throw new BadRequestException("Os parametros são inválidos.", BAD_REQUEST);
       }
 
       await this.validate(params);
@@ -28,9 +23,7 @@ export class EventPurchaseService implements EventPurchaseService {
       await this.ticketAvailabilityForArea({ eventId, eventDetails });
       await this.updateQuantity({ eventId, eventDetails });
 
-      return success(
-        "Tudo certo com a sua compra! Em breve você recebera um email com o seu ingresso.",
-      );
+      return success("Tudo certo com a sua compra! Em breve você recebera um email com o seu ingresso.");
     } catch (err: any) {
       return error(err.message);
     }
@@ -38,50 +31,29 @@ export class EventPurchaseService implements EventPurchaseService {
 
   async validate(params: EventPurchase.EventPurchaseParams): Promise<void> {
     try {
-      console.info(
-        `[EventPurchase-Service]: Validating event purchase params.`,
-      );
+      console.info(`[EventPurchase-Service]: Validating event purchase params.`);
       await EventPurchaseValidator.validate({ event: params });
-      console.info(
-        `[EventPurchase-Service]: Params validate with successfully!.`,
-      );
+      console.info(`[EventPurchase-Service]: Params validate with successfully!.`);
     } catch (err: any) {
-      console.error(
-        `[EventPurchase-Service]: Params are invalid: ${err.message}`,
-      );
+      console.error(`[EventPurchase-Service]: Params are invalid: ${err.message}`);
       throw new BadRequestException(err.message, BAD_REQUEST);
     }
   }
 
-  async fullTicketAvailability(params: {
-    eventId: string;
-    eventDetails: { area: string; quantity: number };
-  }): Promise<void> {
+  async fullTicketAvailability(params: { eventId: string; eventDetails: { area: string; quantity: number } }): Promise<void> {
     try {
       const { quantity } = params.eventDetails;
-      const event = await this.eventRepository.findQuantityByEventId(
-        params.eventId,
-      );
+      const event = await this.eventRepository.findQuantityByEventId(params.eventId);
       if (event.tickets_quantity < quantity) {
-        console.info(
-          `[EventPurchase-Service]: Quantity is not valid for this event: ${quantity}.`,
-        );
-        throw new BadRequestException(
-          "Infelizmente a quantidade de ingressos é inferior a quantidade solicitada na sua compra.",
-          BAD_REQUEST,
-        );
+        console.info(`[EventPurchase-Service]: Quantity is not valid for this event: ${quantity}.`);
+        throw new BadRequestException("Infelizmente a quantidade de ingressos é inferior a quantidade solicitada na sua compra.", BAD_REQUEST);
       }
     } catch (err: any) {
-      console.error(
-        `[EventPurchase-Service]: EventId id invalid: ${params.eventId}.`,
-      );
+      console.error(`[EventPurchase-Service]: EventId id invalid: ${params.eventId}.`);
       throw new BadRequestException(err.message, BAD_REQUEST);
     }
   }
-  async ticketAvailabilityForArea(params: {
-    eventId: string;
-    eventDetails: { area: string; quantity: number };
-  }): Promise<void> {
+  async ticketAvailabilityForArea(params: { eventId: string; eventDetails: { area: string; quantity: number } }): Promise<void> {
     try {
       if (!params.eventDetails.area) {
         return;
@@ -89,50 +61,27 @@ export class EventPurchaseService implements EventPurchaseService {
       const selectedArea = params.eventDetails.area;
       const selectedQuantity = params.eventDetails.quantity;
 
-      const eventFound = await this.eventRepository.findQuantityByArea(
-        params.eventId,
-        selectedArea,
-      );
+      const eventFound = await this.eventRepository.findQuantityByArea(params.eventId, selectedArea);
 
       if (!eventFound) {
-        console.error(
-          `[EventPurchase-Service]: Event area is invalid: ${params.eventDetails.area}.`,
-        );
-        throw new BadRequestException(
-          "Parece que o local que você selecionou não está disponível",
-          BAD_REQUEST,
-        );
+        console.error(`[EventPurchase-Service]: Event area is invalid: ${params.eventDetails.area}.`);
+        throw new BadRequestException("Parece que o local que você selecionou não está disponível", BAD_REQUEST);
       }
 
       if (selectedQuantity > eventFound.area) {
-        console.info(
-          `[EventPurchase-Service]: Quantity is not valid for this area: ${selectedQuantity}.`,
-        );
-        throw new BadRequestException(
-          "Infelizmente a quantidade de ingressos é inferior a quantidade solicitada na sua compra.",
-          BAD_REQUEST,
-        );
+        console.info(`[EventPurchase-Service]: Quantity is not valid for this area: ${selectedQuantity}.`);
+        throw new BadRequestException("Infelizmente a quantidade de ingressos é inferior a quantidade solicitada na sua compra.", BAD_REQUEST);
       }
     } catch (err: any) {
-      console.error(
-        `[EventPurchase-Service]: EventId id invalid: ${params.eventId}.`,
-      );
+      console.error(`[EventPurchase-Service]: EventId id invalid: ${params.eventId}.`);
       throw new BadRequestException(err.message, BAD_REQUEST);
     }
   }
 
-  async updateQuantity(params: {
-    eventId: string;
-    eventDetails: { area: string; quantity: number };
-  }): Promise<void> {
+  async updateQuantity(params: { eventId: string; eventDetails: { area: string; quantity: number } }): Promise<void> {
     try {
-      console.info(
-        `[EventPurchase-Service]: Updating the total quantity value.`,
-      );
-      await this.eventRepository.ticketBooking(
-        params.eventId,
-        params.eventDetails,
-      );
+      console.info(`[EventPurchase-Service]: Updating the total quantity value.`);
+      await this.eventRepository.ticketBooking(params.eventId, params.eventDetails);
     } catch (err: any) {
       throw new BadRequestException(err.message, BAD_REQUEST);
     }
