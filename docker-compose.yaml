@@ -9,3 +9,14 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     ports:
       - 3306:3306
+  rabbitmq-server:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-server
+    hostname: rabbitmq-server
+    ports: 
+      - 5672:5672
+      - 25676:25676
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
