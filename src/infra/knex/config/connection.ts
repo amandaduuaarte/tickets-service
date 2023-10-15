@@ -10,16 +10,11 @@ export class Connection {
     this.db("event_01")
       .then((response) => {
         if (response) {
-          console.info(
-            "[Ticket-service]-Connection with database was successfully!",
-          );
+          console.info("[Ticket-service]-Connection with database was successfully!");
         }
       })
       .catch((error) => {
-        console.error(
-          "[Ticket-service]-Error in connection with database",
-          error,
-        );
+        console.error("[Ticket-service]-Error in connection with database", error);
       });
   }
 }
