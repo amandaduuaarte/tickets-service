@@ -4,10 +4,7 @@ import { ConfigRepositoryInterface } from "@/domain/interfaces/repositories/conf
 export class ConfigRepository implements ConfigRepositoryInterface {
   async findConfigByClientId(clientId: string): Promise<ConfigModel> {
     const config = new Connection();
-    const content = await config
-      .db("config")
-      .select("id", "clientId")
-      .where("clientId", "=", clientId);
+    const content = await config.db("config").select("id", "clientId").where("clientId", "=", clientId);
     try {
       return content[0];
     } catch (error: any) {
