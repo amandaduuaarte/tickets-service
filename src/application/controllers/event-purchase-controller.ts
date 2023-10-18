@@ -1,3 +1,4 @@
+import { RabbitMQ } from "@/infra/rabbit/rabbitmq-config";
 import { Controller, Responsebody } from "../interfaces";
 import { error } from "../utils/http";
 import { EventPurchaseService } from "@/domain/services";
@@ -8,7 +9,7 @@ export class EventPurchaseController implements Controller {
     console.info("[Event-purchase-controller]:", req.body);
 
     try {
-      const eventPurchaseService = new EventPurchaseService(new EventRepository());
+      const eventPurchaseService = new EventPurchaseService(new EventRepository(), new RabbitMQ());
       const content = await eventPurchaseService.run(req.body);
       return res.send(content);
     } catch (err: any) {

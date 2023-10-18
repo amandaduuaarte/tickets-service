@@ -5,10 +5,9 @@ export interface AuthService {
 
 export namespace Auth {
   export type AuthParams = {
-    body: {
-      clientId: string;
-    };
+    clientId: string;
   };
+
   export type AuthReturn = {
     accessToken: {
       clientId: string;

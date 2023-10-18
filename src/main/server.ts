@@ -11,21 +11,15 @@ const connection = new Connection();
 const rabbitMQ = new RabbitMQ();
 const router = express.Router();
 
+connection.validateConnection();
+rabbitMQ.createConnection("email-notification");
+
 app.use(express.json());
 
 app.use("/api", router);
 app.get("/api", (req, res) => res.status(200).json({ message: "OK" }));
 app.use("/api", authRoute);
 app.use("/api", eventPurchaseRouter);
-
-connection.validateConnection();
-rabbitMQ.createConnection("email-notification");
-setTimeout(() => {
-  rabbitMQ.publishDataQueue("email-notification", {
-    email: "test@email",
-  });
-}, 1000);
-
 app.listen(port, () => {
   console.log(`Server listening on port:${port}`);
 });

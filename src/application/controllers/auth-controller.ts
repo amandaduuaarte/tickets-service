@@ -5,14 +5,16 @@ import { ConfigRepository } from "@/infra/knex/repositories/config/config-reposi
 import { error, success } from "../utils/http";
 
 export class AuthController implements Controller {
-  public async handleRequest(request: any, response: any) {
+  public async handleRequest(req: any, res: any): Promise<any> {
+    console.info("[Auth-controller]:", req.body);
+
     try {
       const authservice = new AuthService(new ConfigRepository());
-      const content = await authservice.run(request);
+      const content = await authservice.run(req.body);
 
-      return response.send(success(content));
+      return res.send(success(content));
     } catch (err: any) {
-      return response.send(error({ message: err.message }));
+      return res.send(error({ message: err.message }));
     }
   }
 }
