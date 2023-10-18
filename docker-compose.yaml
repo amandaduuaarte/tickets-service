@@ -13,6 +13,8 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq-server
     hostname: rabbitmq-server
+    depends_on:
+      - tickets-db
     ports: 
       - 5672:5672
       - 25676:25676

@@ -4,10 +4,15 @@ import { EventPurchaseValidator } from "../schemas/event-purchase-schema";
 import { BAD_REQUEST } from "@/application/constants";
 import { EventRepository } from "@/infra/knex/repositories/events/events-repository";
 import { error, success } from "@/application/utils/http";
+import { RabbitMQConfig } from "../interfaces/rabbit/rabbitmq-config";
 
 export class EventPurchaseService implements EventPurchaseService {
-  constructor(readonly eventRepository: EventRepository) {
+  constructor(
+    readonly eventRepository: EventRepository,
+    readonly rabbitMQ: RabbitMQConfig,
+  ) {
     this.eventRepository = eventRepository;
+    this.rabbitMQ = rabbitMQ;
   }
 
   async run(params: EventPurchase.EventPurchaseParams): Promise<EventPurchase.EventPurchaseReturn | void> {
@@ -23,6 +28,15 @@ export class EventPurchaseService implements EventPurchaseService {
       await this.ticketAvailabilityForArea({ eventId, eventDetails });
       await this.updateQuantity({ eventId, eventDetails });
 
+      console.info(`[EventPurchase-Service]: Everything ok.`);
+
+      setTimeout(async () => {
+        await this.rabbitMQ.publishDataQueue("email-notification", {
+          name: params.ownerName,
+          email: params.contact.email,
+          eventId: eventId,
+        });
+      }, 1000);
       return success("Tudo certo com a sua compra! Em breve você recebera um email com o seu ingresso.");
     } catch (err: any) {
       return error(err.message);
@@ -86,5 +100,4 @@ export class EventPurchaseService implements EventPurchaseService {
       throw new BadRequestException(err.message, BAD_REQUEST);
     }
   }
-  // publicar no rabbit (acho que posso fazer isso em outro arquivo)
 }
