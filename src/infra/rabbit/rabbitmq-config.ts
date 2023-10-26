@@ -1,60 +1,61 @@
+import { Channel, Connection, connect, Message } from "amqplib";
+
 import { RabbitMQConfig } from "@/domain/interfaces/rabbit/rabbitmq-config";
-import { Channel, Connection, connect } from "amqplib";
 
 export class RabbitMQ implements RabbitMQConfig {
   private conn?: Connection;
   private channel?: Channel;
   private connectionActive: boolean = false;
 
-  constructor() {}
-  async createConnection(queue: string): Promise<void> {
-    const uri = "amqp://guest:guest@localhost:5672";
-    await connect(uri)
-      .then(async (connect) => {
-        console.info("[RabbitMQ] - Connection created successfully");
-        this.connectionActive = true;
+  constructor() {
+    this.createConnection();
+  }
 
-        this.channel = await connect.createChannel();
-        console.info("[RabbitMQ] - Channel created successfully");
-        this.channel.assertQueue(queue);
-      })
-      .catch((error) => {
-        this.conn?.close();
-        console.error(`[RabbitMQ] - Failed to create a connection: ${error}`);
-      });
+  async createConnection(): Promise<void> {
+    const uri = "amqp://guest:guest@localhost:5672";
+    try {
+      this.conn = await connect(uri);
+      this.channel = await this.conn.createChannel();
+      this.connectionActive = true;
+      console.info("[RabbitMQ] - Connection created successfully");
+    } catch (error) {
+      console.error(`[RabbitMQ] - Failed to create a connection: ${error}`);
+      this.connectionActive = false;
+    }
   }
 
   async publishDataQueue(queue: string, data: any): Promise<boolean> {
-    // send data to queue
     try {
       if (!this.connectionActive) {
         console.info("[RabbitMQ] - Could not send data to queue because connection is not active.");
         throw new Error("[RabbitMQ] - Could not send data to queue because connection is not active.");
       }
+
+      this.channel?.assertQueue(queue);
+
       console.info(`[RabbitMQ] - Try to send message to ${queue}.`);
       return (await this.channel?.sendToQueue(queue, Buffer.from(JSON.stringify(data)))) ?? false;
     } catch (err: any) {
-      console.info("[RabbitMQ] - Could not send data to queue because connection is not active.");
+      console.error("[RabbitMQ] - Error while publishing data:", err);
       return false;
     }
   }
 
-  async consumer(queue: string) {
+  async consumer(queue: string): Promise<void> {
     try {
       if (!this.connectionActive) {
-        console.info("[RabbitMQ] - Could not send data to queue because connection is not active.");
-        throw new Error("[RabbitMQ] - Could not send data to queue because connection is not active.");
+        console.info("[RabbitMQ] - Could not receive data from the queue because the connection is not active.");
+        throw new Error("[RabbitMQ] - Could not receive data from the queue because the connection is not active.");
       }
 
-      this.channel?.consume(queue, (data: any) => {
-        console.log(`${Buffer.from(data.content)}`);
-        this.channel?.ack(data);
+      this.channel?.consume(queue, (message: Message | null) => {
+        if (message) {
+          console.log(`Received message: ${message.content.toString()}`);
+          this.channel?.ack(message);
+        }
       });
-    } catch {
-      if (!this.connectionActive) {
-        console.info("[RabbitMQ] - Could not recive data to queue.");
-        throw new Error("[RabbitMQ] - Could not recive data to queue.");
-      }
+    } catch (error) {
+      console.error("[RabbitMQ] - Error while consuming data:", error);
     }
   }
 }
