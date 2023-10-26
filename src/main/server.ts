@@ -12,7 +12,7 @@ const rabbitMQ = new RabbitMQ();
 const router = express.Router();
 
 connection.validateConnection();
-rabbitMQ.createConnection("email-notification");
+rabbitMQ.createConnection();
 
 app.use(express.json());
 
