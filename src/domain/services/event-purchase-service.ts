@@ -30,13 +30,12 @@ export class EventPurchaseService implements EventPurchaseService {
 
       console.info(`[EventPurchase-Service]: Everything ok.`);
 
-      setTimeout(async () => {
-        await this.rabbitMQ.publishDataQueue("email-notification", {
-          name: params.ownerName,
-          email: params.contact.email,
-          eventId: eventId,
-        });
-      }, 1000);
+      await this.rabbitMQ.publishDataQueue("email-notification", {
+        name: params.ownerName,
+        email: params.contact.email,
+        eventId: eventId,
+      });
+
       return success("Tudo certo com a sua compra! Em breve você recebera um email com o seu ingresso.");
     } catch (err: any) {
       return error(err.message);
