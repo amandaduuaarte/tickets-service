@@ -22,12 +22,13 @@ export class SendEmailWorker implements SendEmailWorkerInterface {
         if (message !== null) {
           const content = JSON.parse(message.content.toString());
           console.info("[SendEmailWorker]: Message received at worker:", content);
-
           const sendEmailData = {
             from: env.EMAIL_USER || "ticketsnodemailerservice@zohomail.com",
             to: content.email,
             subject: "Tickets-Service",
-            text: "Aquiiii",
+            html: `<h2> Compra realizada!</h2>
+              <p>Sua compra foi processada com sucesso, segue em anexo seus tickets.</p>
+            `,
           };
 
           this.sendEmail(sendEmailData);
@@ -52,7 +53,8 @@ export class SendEmailWorker implements SendEmailWorkerInterface {
         if (error) {
           console.error(`[SendEmailWorker]: Error sending email`, error);
         } else {
-          console.info(`[SendEmailWorker]: Successful email sending: ${info}`);
+          console.info(info.toString());
+          console.info(`[SendEmailWorker]: Successful email sending`);
         }
       });
     } catch (err: any) {
