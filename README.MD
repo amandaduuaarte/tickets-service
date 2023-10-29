@@ -1,9 +1,5 @@
 ### Documentation:
 
-- TODO: 
-  - implementar um worker para o consumo da fila (ficar sempre olhando independente do service principal)
-  - implementar o envio de email
-  - criar uma rota de cadastro de evento (Nao sei ainda se vou fazer);
 ## Routes:
 
 - Auth route
