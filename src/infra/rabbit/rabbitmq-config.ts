@@ -59,8 +59,3 @@ export class RabbitMQ implements RabbitMQConfig {
     }
   }
 }
-
-/**
- * A Connection represents a real TCP connection to the message broker, whereas a Channel is a virtual connection (AMQP connection) inside it.
- * This way you can use as many (virtual) connections as you want inside your application without overloading the broker with TCP connections.
- */
