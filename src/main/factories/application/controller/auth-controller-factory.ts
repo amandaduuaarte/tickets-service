@@ -1,0 +1,6 @@
+import { Controller } from "@/application/interfaces";
+import { AuthController } from "@/application/controllers/auth-controller";
+
+export const AuthControllerFactory = (): Controller => {
+  return new AuthController();
+};
