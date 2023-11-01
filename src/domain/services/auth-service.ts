@@ -1,10 +1,10 @@
 import { BadRequestException } from "@/application/errors/errorExpection";
-import { Auth } from "../interfaces";
+import { Auth, AuthServiceInterface } from "../interfaces";
 import Jwt from "jsonwebtoken";
 import { ConfigRepository } from "@/infra/knex/repositories/config/config-repository";
 import { BAD_REQUEST } from "@/application/constants";
 
-export class AuthService implements AuthService {
+export class AuthService implements AuthServiceInterface {
   constructor(private readonly configRepository: ConfigRepository) {
     this.configRepository = configRepository;
   }

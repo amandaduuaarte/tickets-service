@@ -1,21 +1,21 @@
-import { AuthService } from "@/domain/services";
-
+import { Responsebody } from "../interfaces";
 import { Controller } from "../interfaces/controller";
-import { ConfigRepository } from "@/infra/knex/repositories/config/config-repository";
-import { error, success } from "../utils/http";
 
-export class AuthController {
-  // ADD o implements
-  public async handleRequest(req: any, res: any): Promise<any> {
-    console.info("[Auth-controller]:", req.body);
+import { error, success } from "../utils/http";
+import { Auth, AuthServiceInterface } from "@/domain/interfaces";
+
+export class AuthController implements Controller {
+  constructor(private readonly authService: AuthServiceInterface) {}
+  public async handleRequest(data: Auth.AuthParams): Promise<Responsebody> {
+    console.info("[Auth-controller]:", data);
 
     try {
-      const authservice = new AuthService(new ConfigRepository());
-      const content = await authservice.run(req.body);
+      const authservice = this.authService;
+      const content = await authservice.run(data);
 
-      return res.send(success(content));
+      return success(content);
     } catch (err: any) {
-      return res.send(error({ message: err.message }));
+      return error({ message: err.message });
     }
   }
 }
