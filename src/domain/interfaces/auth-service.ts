@@ -1,5 +1,4 @@
 export interface AuthServiceInterface {
-  // eslint-disable-next-line no-unused-vars
   run(params: Auth.AuthParams): Promise<Auth.AuthReturn>;
 }
 
