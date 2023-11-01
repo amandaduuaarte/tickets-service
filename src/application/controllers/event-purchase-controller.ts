@@ -1,17 +1,16 @@
-import { RabbitMQ } from "@/infra/rabbit/rabbitmq-config";
 import { Controller, Responsebody } from "../interfaces";
 import { error } from "../utils/http";
-import { EventPurchaseService } from "@/domain/services";
-import { EventRepository } from "@/infra/knex/repositories/events/events-repository";
+
+import { EventPurchase, EventPurchaseServiceInterface } from "@/domain/interfaces/event-purchase-service";
 
 export class EventPurchaseController implements Controller {
-  public async handleRequest(req: any, res: any): Promise<Responsebody | any> {
-    console.info("[Event-purchase-controller]:", req.body);
+  constructor(private readonly eventPurchaseService: EventPurchaseServiceInterface) {}
+  public async handleRequest(data: EventPurchase.EventPurchaseParams): Promise<Responsebody | void> {
+    console.info("[Event-purchase-controller]:", data);
 
     try {
-      const eventPurchaseService = new EventPurchaseService(new EventRepository(), new RabbitMQ());
-      const content = await eventPurchaseService.run(req.body);
-      return res.send(content);
+      const content = await this.eventPurchaseService.run(data);
+      return content;
     } catch (err: any) {
       console.error("[Event-purchase-controller]:", error);
       return;
