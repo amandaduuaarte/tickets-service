@@ -23,7 +23,8 @@ module.exports = {
       'space-in-parens': 'error',
       'no-multiple-empty-lines': 'error',
         'prefer-const': 'error',
-        'no-undef': 'off',
+      'no-undef': 'off',
+        'no-unused-vars': 'off',
         "prettier/prettier": [
             "error",
             {

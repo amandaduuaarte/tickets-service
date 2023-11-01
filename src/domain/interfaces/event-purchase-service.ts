@@ -1,8 +1,10 @@
-export interface EventPurchaseService {
+import { Responsebody } from "@/application/interfaces";
+
+export interface EventPurchaseServiceInterface {
   run(
     // eslint-disable-next-line no-unused-vars
     params: EventPurchase.EventPurchaseParams,
-  ): Promise<EventPurchase.EventPurchaseReturn | void>;
+  ): Promise<Responsebody | void>;
 }
 
 export namespace EventPurchase {
@@ -16,13 +18,6 @@ export namespace EventPurchase {
     eventDetails: {
       area: string;
       quantity: number;
-    };
-  };
-
-  export type EventPurchaseReturn = {
-    body: {
-      code: number;
-      message: string;
     };
   };
 }

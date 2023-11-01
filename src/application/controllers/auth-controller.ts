@@ -4,7 +4,8 @@ import { Controller } from "../interfaces/controller";
 import { ConfigRepository } from "@/infra/knex/repositories/config/config-repository";
 import { error, success } from "../utils/http";
 
-export class AuthController implements Controller {
+export class AuthController {
+  // ADD o implements
   public async handleRequest(req: any, res: any): Promise<any> {
     console.info("[Auth-controller]:", req.body);
 

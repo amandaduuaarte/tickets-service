@@ -4,5 +4,5 @@ import { Request, Response } from "express";
 import { Responsebody } from "./index";
 
 export interface Controller {
-  handleRequest: (request: Request, response: Response) => Promise<Responsebody>;
+  handleRequest: (data: any) => Promise<Responsebody | void>;
 }
