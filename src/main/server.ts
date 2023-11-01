@@ -19,11 +19,6 @@ const sendEmailWorker = new SendEmailWorker(new Nodemailer());
 const router = express.Router();
 
 connection.validateConnection();
-rabbitMQ.createConnection();
-
-setTimeout(() => {
-  sendEmailWorker.consumerQueue("email-notification");
-}, 1000);
 
 app.use(express.json());
 
