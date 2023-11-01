@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
+import { Responsebody } from "./http";
 
 export interface Middleware {
-  handleRequest: (request: Request, response: Response, next: any) => Promise<Response | void>;
+  handleRequest: (data: any) => Promise<Responsebody | void>;
 }

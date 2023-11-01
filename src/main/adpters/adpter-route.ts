@@ -8,7 +8,7 @@ export const AdpterRouter = (controller: Controller) => {
     res.send(content);
 
     if (!content) {
-      res.send(content);
+      res.send({ message: "Invalid request." });
     }
   };
 };
