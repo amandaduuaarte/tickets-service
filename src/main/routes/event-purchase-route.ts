@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { EventPurchaseController } from "@/application/controllers";
+
 import authMiddleware from "../middlewares/auth-middleware";
+import { EventPurchaseControllerFactory } from "../factories/application/controller";
 
 export const eventPurchaseRouter = Router();
-const eventPurchaseController = new EventPurchaseController();
 
-eventPurchaseRouter.post("/event-purchase", authMiddleware.handleRequest, eventPurchaseController.handleRequest);
+eventPurchaseRouter.post("/event-purchase", authMiddleware.handleRequest, EventPurchaseControllerFactory);
