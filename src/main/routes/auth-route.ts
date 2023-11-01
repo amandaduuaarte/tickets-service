@@ -1,7 +1,6 @@
-import { AuthController } from "@/application/controllers/auth-controller";
 import { Router } from "express";
+import { AuthControllerFactory } from "../factories/application/controller";
 
 export const authRoute = Router();
-const authController = new AuthController();
 
-authRoute.post("/auth", authController.handleRequest);
+authRoute.post("/auth", AuthControllerFactory);
