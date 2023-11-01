@@ -16,7 +16,7 @@ export class EventPurchaseService implements EventPurchaseServiceInterface {
     this.rabbitMQ = rabbitMQ;
   }
 
-  async run(params: EventPurchase.EventPurchaseParams): Promise<Responsebody | void> {
+  async run(params: EventPurchase.EventPurchaseParams): Promise<Responsebody> {
     try {
       const { eventId, eventDetails } = params;
       if (!params) {
