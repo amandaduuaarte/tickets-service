@@ -1,12 +1,13 @@
 import { BadRequestException } from "@/application/errors/errorExpection";
-import { EventPurchase } from "../interfaces/event-purchase-service";
+import { EventPurchase, EventPurchaseServiceInterface } from "../interfaces/event-purchase-service";
 import { EventPurchaseValidator } from "../schemas/event-purchase-schema";
 import { BAD_REQUEST } from "@/application/constants";
 import { EventRepository } from "@/infra/knex/repositories/events/events-repository";
 import { error, success } from "@/application/utils/http";
 import { RabbitMQConfig } from "../interfaces/rabbit/rabbitmq-config";
+import { Responsebody } from "@/application/interfaces";
 
-export class EventPurchaseService implements EventPurchaseService {
+export class EventPurchaseService implements EventPurchaseServiceInterface {
   constructor(
     readonly eventRepository: EventRepository,
     readonly rabbitMQ: RabbitMQConfig,
@@ -15,7 +16,7 @@ export class EventPurchaseService implements EventPurchaseService {
     this.rabbitMQ = rabbitMQ;
   }
 
-  async run(params: EventPurchase.EventPurchaseParams): Promise<EventPurchase.EventPurchaseReturn | void> {
+  async run(params: EventPurchase.EventPurchaseParams): Promise<Responsebody | void> {
     try {
       const { eventId, eventDetails } = params;
       if (!params) {
@@ -30,13 +31,12 @@ export class EventPurchaseService implements EventPurchaseService {
 
       console.info(`[EventPurchase-Service]: Everything ok.`);
 
-
       await this.rabbitMQ.publishDataQueue("email-notification", {
         name: params.ownerName,
         email: params.contact.email,
         eventId: eventId,
       });
-      
+
       return success("Tudo certo com a sua compra! Em breve você recebera um email com o seu ingresso.");
     } catch (err: any) {
       return error(err.message);
@@ -54,7 +54,7 @@ export class EventPurchaseService implements EventPurchaseService {
     }
   }
 
-  async fullTicketAvailability(params: { eventId: string; eventDetails: { area: string; quantity: number } }): Promise<void> {
+  private async fullTicketAvailability(params: { eventId: string; eventDetails: { area: string; quantity: number } }): Promise<void> {
     try {
       const { quantity } = params.eventDetails;
       const event = await this.eventRepository.findQuantityByEventId(params.eventId);
@@ -67,7 +67,7 @@ export class EventPurchaseService implements EventPurchaseService {
       throw new BadRequestException(err.message, BAD_REQUEST);
     }
   }
-  async ticketAvailabilityForArea(params: { eventId: string; eventDetails: { area: string; quantity: number } }): Promise<void> {
+  private async ticketAvailabilityForArea(params: { eventId: string; eventDetails: { area: string; quantity: number } }): Promise<void> {
     try {
       if (!params.eventDetails.area) {
         return;
@@ -92,7 +92,7 @@ export class EventPurchaseService implements EventPurchaseService {
     }
   }
 
-  async updateQuantity(params: { eventId: string; eventDetails: { area: string; quantity: number } }): Promise<void> {
+  private async updateQuantity(params: { eventId: string; eventDetails: { area: string; quantity: number } }): Promise<void> {
     try {
       console.info(`[EventPurchase-Service]: Updating the total quantity value.`);
       await this.eventRepository.ticketBooking(params.eventId, params.eventDetails);

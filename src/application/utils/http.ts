@@ -1,20 +1,17 @@
 import { BAD_REQUEST, SUCCESS } from "../constants";
+import { Responsebody } from "../interfaces";
 
-interface ReturnContent {
-  code: number;
-  body: any;
-}
-export const success = (data: any): ReturnContent => {
+export const success = (data: any): Responsebody => {
   return {
     code: SUCCESS,
-    body: data,
+    content: data,
   };
 };
 
-export const error = (data: any): ReturnContent => {
+export const error = (data: any): Responsebody => {
   return {
     code: BAD_REQUEST,
-    body: data,
+    content: data,
   };
 };
 

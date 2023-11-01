@@ -3,7 +3,7 @@ import { BAD_REQUEST } from "@/application/constants";
 import { Middleware } from "@/application/interfaces/middleware";
 import { Request, Response } from "express";
 
-class AuthMiddleware implements Middleware {
+export class AuthMiddleware implements Middleware {
   handleRequest(req: Request, res: Response, next: any): void | any {
     try {
       const { accesstoken } = req.headers;
@@ -21,5 +21,3 @@ class AuthMiddleware implements Middleware {
     next();
   }
 }
-
-export default new AuthMiddleware();
