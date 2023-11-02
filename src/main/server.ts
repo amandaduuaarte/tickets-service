@@ -1,10 +1,10 @@
 import express from "express";
-import { Connection } from "@/infra/knex/config/connection";
-import { eventPurchaseRouter, authRoute } from "./routes";
 import dotenv from "dotenv";
-
-import { SendEmailWorker } from "@/infra/rabbit/workers/send-email-worker";
+import { Connection } from "@/infra/knex/config/connection";
 import { Nodemailer } from "@/infra/nodemailer/config";
+
+import { eventPurchaseRouter, authRoute, createEventRouter } from "./routes";
+import { SendEmailWorker } from "@/infra/rabbit/workers/send-email-worker";
 
 dotenv.config();
 
@@ -28,6 +28,7 @@ app.use("/api", router);
 app.get("/api", (req, res) => res.status(200).json({ message: "OK" }));
 app.use("/api", authRoute);
 app.use("/api", eventPurchaseRouter);
+app.use("/api", createEventRouter);
 app.listen(port, () => {
   console.log(`Server listening on port:${port}`);
 });
