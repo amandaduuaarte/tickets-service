@@ -1,7 +1,7 @@
 import { Responsebody } from "@/application/interfaces";
 
 export interface CreateEventServiceInterface {
-  run(params: CreateEvent.CreateEventParams): Promise<Responsebody>;
+  run(params: CreateEvent.CreateEventParams): Promise<Responsebody | void>;
 }
 
 export namespace CreateEvent {

@@ -1,12 +1,14 @@
 import { Controller, Responsebody } from "../interfaces";
-import { CreateEvent } from "@/domain/interfaces";
+import { CreateEvent, CreateEventServiceInterface } from "@/domain/interfaces";
 
 export class CreateEventController implements Controller {
+  constructor(private readonly createEventService: CreateEventServiceInterface) {}
   public async handleRequest(data: CreateEvent.CreateEventParams): Promise<Responsebody | void> {
     console.info("[Create-Event-controller]:", data);
 
     try {
-      console.log(data);
+      const content = await this.createEventService.run(data);
+      return content;
     } catch (err: any) {
       console.error(err.message);
     }
