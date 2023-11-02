@@ -3,7 +3,7 @@
 ## Explicando o projeto: 🎯
 MicroServiço de validação de compras de ingressos para eventos, o projeto consiste em um sistema simples de verificação basicamente funciona como um MS que deve ser integrado a outros serviços já que sua resposabilidade por ora é validar se todos os dados do comprador e do evento estão de acordo com o esperado e com isso realizar o envio de um email para o endereço fornecido pelo possível comprador.
 
-### Funcionalidades já implementadas: 
+### Funcionalidades já implementadas: 🤓
 * Token válido: Hoje a aplicação conta com uma validação de token, ou seja, a rota para confirmar compra precisa de um token válido.
 * Envio de email: O projeto utiliza de um serviço para que possa ser feito o disparo de email para o endereço informado no payload recebido.
 
