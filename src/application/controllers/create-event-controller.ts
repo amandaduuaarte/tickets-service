@@ -10,7 +10,8 @@ export class CreateEventController implements Controller {
       const content = await this.createEventService.run(data);
       return content;
     } catch (err: any) {
-      console.error(err.message);
+      console.error("[Event-purchase-controller]:", err);
+      return;
     }
   }
 }
