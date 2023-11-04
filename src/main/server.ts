@@ -32,6 +32,7 @@ app.get("/api", (req, res) => res.status(200).json({ message: "OK" }));
 app.use("/api", authRoute);
 app.use("/api", eventPurchaseRouter);
 app.use("/api", createEventRouter);
+
 app.listen(port, () => {
   console.log(`Server listening on port:${port}`);
 });
