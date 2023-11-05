@@ -6,11 +6,13 @@ import { EventRepository } from "@/infra/knex/repositories/events/events-reposit
 import { error, success } from "@/application/utils/http";
 import { RabbitMQConfig } from "../interfaces/rabbit/rabbitmq-config";
 import { Responsebody } from "@/application/interfaces";
+import { SendEmailWorker } from "@/infra/rabbit/workers/send-email-worker";
 
 export class EventPurchaseService implements EventPurchaseServiceInterface {
   constructor(
     readonly eventRepository: EventRepository,
     readonly rabbitMQ: RabbitMQConfig,
+    readonly sendEmailWorker: SendEmailWorker,
   ) {
     this.eventRepository = eventRepository;
     this.rabbitMQ = rabbitMQ;
@@ -36,6 +38,7 @@ export class EventPurchaseService implements EventPurchaseServiceInterface {
         email: params.contact.email,
         eventId: eventId,
       });
+      this.sendEmailWorker.consumerQueue("email-notification");
 
       return success("Tudo certo com a sua compra! Em breve você recebera um email com o seu ingresso.");
     } catch (err: any) {
