@@ -1,8 +1,8 @@
 import { Channel, Connection, connect, Message } from "amqplib";
 
-import { RabbitMQConfig } from "@/domain/interfaces/rabbit/rabbitmq-config";
+import { RabbitMQConfigInterface } from "@/domain/interfaces/rabbit/rabbitmq-config";
 
-export class RabbitMQ implements RabbitMQConfig {
+export class RabbitMQ implements RabbitMQConfigInterface {
   private conn?: Connection;
   private channel?: Channel;
   private connectionActive: boolean = false;

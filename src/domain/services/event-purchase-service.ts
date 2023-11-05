@@ -4,14 +4,14 @@ import { EventPurchaseValidator } from "../schemas/event-purchase-schema";
 import { BAD_REQUEST } from "@/application/constants";
 import { EventRepository } from "@/infra/knex/repositories/events/events-repository";
 import { error, success } from "@/application/utils/http";
-import { RabbitMQConfig } from "../interfaces/rabbit/rabbitmq-config";
+import { RabbitMQConfigInterface } from "../interfaces/rabbit/rabbitmq-config";
 import { Responsebody } from "@/application/interfaces";
 import { SendEmailWorker } from "@/infra/rabbit/workers/send-email-worker";
 
 export class EventPurchaseService implements EventPurchaseServiceInterface {
   constructor(
     readonly eventRepository: EventRepository,
-    readonly rabbitMQ: RabbitMQConfig,
+    readonly rabbitMQ: RabbitMQConfigInterface,
     readonly sendEmailWorker: SendEmailWorker,
   ) {
     this.eventRepository = eventRepository;

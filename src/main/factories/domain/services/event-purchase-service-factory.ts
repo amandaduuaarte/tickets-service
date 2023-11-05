@@ -5,7 +5,8 @@ import { Nodemailer } from "@/infra/nodemailer/config";
 import { RabbitMQ } from "@/infra/rabbit/rabbitmq-config";
 import { SendEmailWorker } from "@/infra/rabbit/workers/send-email-worker";
 import { EventsRepositoryFactory } from "../../infra/knex/repositories/events/events-repository-factory";
+import { RabbitMQFactory } from "../../infra/rabbit/rabbitmq-config-factory";
 
 export const EventPurchaseServiceFactory = (): EventPurchaseServiceInterface => {
-  return new EventPurchaseService(EventsRepositoryFactory(), new RabbitMQ(), new SendEmailWorker(new Nodemailer()));
+  return new EventPurchaseService(EventsRepositoryFactory(), RabbitMQFactory(), new SendEmailWorker(new Nodemailer()));
 };
