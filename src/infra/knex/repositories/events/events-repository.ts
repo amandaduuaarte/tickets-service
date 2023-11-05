@@ -39,7 +39,7 @@ export class EventRepository implements EventRepositoryInterface {
     }
   }
 
-  async ticketBooking(eventId: string, eventDetails: { area: string; quantity: number }) {
+  async ticketBooking(eventId: string, eventDetails: { area: string; quantity: number }): Promise<void> {
     try {
       console.info(`[Event-ticketBooking-Repository]: Starting to update quantity by area.`);
       this.quantityForArea(eventId, eventDetails);
@@ -52,7 +52,7 @@ export class EventRepository implements EventRepositoryInterface {
     }
   }
 
-  private async quantityTotal(eventId: string, quantity: number) {
+  async quantityTotal(eventId: string, quantity: number): Promise<void> {
     const bdName = "events";
     const config = KnexConnectionFactory().db(bdName);
     const currentQuantity: any = await config.where("title", eventId).select("tickets_quantity");
@@ -63,7 +63,7 @@ export class EventRepository implements EventRepositoryInterface {
     console.info(`[Event-quantityTotal-Repository]: Total quantity updated with successfully.`);
   }
 
-  private async quantityForArea(eventId: string, eventDetails: { area: string; quantity: number }) {
+  async quantityForArea(eventId: string, eventDetails: { area: string; quantity: number }): Promise<void> {
     try {
       const bdName = "events";
       const config = KnexConnectionFactory().db(bdName);

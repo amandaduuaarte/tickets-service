@@ -1,7 +1,8 @@
 import { CreateEventServiceInterface } from "@/domain/interfaces";
 import { CreateEventService } from "@/domain/services";
-import { CreateEventRepository } from "@/infra/knex/repositories/events/create-event-repository";
+
+import { CreateEventRepositoryFactory } from "../../infra/knex/repositories/events/create-event-repository-factory";
 
 export const CreateEventServiceFactory = (): CreateEventServiceInterface => {
-  return new CreateEventService(new CreateEventRepository());
+  return new CreateEventService(CreateEventRepositoryFactory());
 };
