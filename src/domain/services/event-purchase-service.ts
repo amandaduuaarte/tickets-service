@@ -27,6 +27,8 @@ export class EventPurchaseService implements EventPurchaseServiceInterface {
       }
 
       await this.validate(params);
+      const isInvalidEvent = await this.validateEventId(eventId);
+
       await this.fullTicketAvailability({ eventId, eventDetails });
       await this.ticketAvailabilityForArea({ eventId, eventDetails });
       await this.updateQuantity({ eventId, eventDetails });
@@ -46,6 +48,14 @@ export class EventPurchaseService implements EventPurchaseServiceInterface {
     }
   }
 
+  async validateEventId(eventId: string): Promise<void> {
+    try {
+      await this.eventRepository.findEventById(eventId);
+    } catch (err: any) {
+      console.error(`[EventPurchase-Service]: EventId is not found.`);
+      throw new BadRequestException(err.message, BAD_REQUEST);
+    }
+  }
   async validate(params: EventPurchase.EventPurchaseParams): Promise<void> {
     try {
       console.info(`[EventPurchase-Service]: Validating event purchase params.`);

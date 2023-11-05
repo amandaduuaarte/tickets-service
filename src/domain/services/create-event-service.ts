@@ -13,6 +13,7 @@ export class CreateEventService implements CreateEventServiceInterface {
   }
   async run(params: CreateEvent.CreateEventParams): Promise<Responsebody | void> {
     try {
+      const { date } = params;
       if (!params) {
         console.error(`[Create-Event-Service]: Params are required.`);
         throw new BadRequestException("Os parametros são inválidos.", BAD_REQUEST);
@@ -20,6 +21,7 @@ export class CreateEventService implements CreateEventServiceInterface {
 
       await this.validate(params);
       await this.areasValidate(params);
+      await this.dateValidate(date);
       // await this.createEventTable(params);
 
       return success("Tudo certo com o seu evento.");
@@ -46,11 +48,26 @@ export class CreateEventService implements CreateEventServiceInterface {
         console.error(`[EventPurchase-Service]: areas not found.`);
         throw new BadRequestException("É necessário informar a quantidade de ingressos disponiveis por area.", BAD_REQUEST);
       }
-      if (data.front && data.vip && data.pista) {
-        data.ticket_quantity = data.front + data.vip + data.pista;
-      }
+      if (data.front && data.vip && data.pista) data.ticket_quantity = data.front + data.vip + data.pista;
     } catch (err: any) {
       console.error(`[EventPurchase-Service]: Params are invalid`);
+      throw new BadRequestException(err.message, BAD_REQUEST);
+    }
+  }
+
+  private async dateValidate(date: string): Promise<void> {
+    try {
+      console.info(`[EventPurchase-Service]: dateValidate: ${date}`);
+      const eventDate = new Date(date);
+      const nowDate = new Date();
+
+      console.log(eventDate, nowDate);
+      if (eventDate < nowDate) {
+        console.error(`[EventPurchase-Service]: EventDate is invalid: ${eventDate}`);
+        throw new BadRequestException("A data do evento é anterior a data atual", BAD_REQUEST);
+      }
+    } catch (err: any) {
+      console.error(`[Create-Event-Service]: ${err.message}`);
       throw new BadRequestException(err.message, BAD_REQUEST);
     }
   }

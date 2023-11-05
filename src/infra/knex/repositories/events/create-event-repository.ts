@@ -26,7 +26,7 @@ export class CreateEventRepository implements CreateEventRepositoryInterface {
       };
       const config = new Connection();
       return await config
-        .db("event_01")
+        .db("events")
         .insert(newRow)
         .then(() => {
           console.info(`[createEvent]: Event table create successfully}.`);
