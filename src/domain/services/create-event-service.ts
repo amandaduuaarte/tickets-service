@@ -6,6 +6,7 @@ import { BAD_REQUEST } from "@/application/constants";
 import { error, success } from "@/application/utils/http";
 import { CreateEventRepository } from "@/infra/knex/repositories/events/create-event-repository";
 import { CreateEventeValidator } from "../schemas/create-event-schema";
+import { IsValidDate } from "@/application/utils/stringsValidations";
 
 export class CreateEventService implements CreateEventServiceInterface {
   constructor(readonly createEventRepository: CreateEventRepository) {
@@ -22,7 +23,7 @@ export class CreateEventService implements CreateEventServiceInterface {
       await this.validate(params);
       await this.areasValidate(params);
       await this.dateValidate(date);
-      // await this.createEventTable(params);
+      await this.createEventTable(params);
 
       return success("Tudo certo com o seu evento.");
     } catch (err: any) {
@@ -61,11 +62,15 @@ export class CreateEventService implements CreateEventServiceInterface {
       const eventDate = new Date(date);
       const nowDate = new Date();
 
-      console.log(eventDate, nowDate);
       if (eventDate < nowDate) {
         console.error(`[EventPurchase-Service]: EventDate is invalid: ${eventDate}`);
         throw new BadRequestException("A data do evento é anterior a data atual", BAD_REQUEST);
       }
+
+      // if (!IsValidDate(date)) {
+      //   console.error(`[EventPurchase-Service]: EventDate is invalid: ${eventDate}`);
+      //   throw new BadRequestException("A data do evento é inválida", BAD_REQUEST);
+      // }
     } catch (err: any) {
       console.error(`[Create-Event-Service]: ${err.message}`);
       throw new BadRequestException(err.message, BAD_REQUEST);

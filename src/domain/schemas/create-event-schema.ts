@@ -1,4 +1,4 @@
-import { ValidationDate } from "@/application/utils/stringsValidations";
+import { ValidationFormatDate } from "@/application/utils/stringsValidations";
 import * as yup from "yup";
 
 export const CreateEventeValidator = yup.object().shape({
@@ -14,7 +14,7 @@ export const CreateEventeValidator = yup.object().shape({
       date: yup
         .string()
         .required("A data do evento precisa ser informada.")
-        .test("dateFormat", "A data não esta no formato esperado: AAAA-MM-DD HH:MM:SS", (value) => ValidationDate(value)),
+        .test("dateFormat", "A data não esta no formato esperado: AAAA-MM-DD HH:MM:SS", (value) => ValidationFormatDate(value)),
     })
     .required("É necessário informar os parametros para concluir o cadastro do evento."),
 });

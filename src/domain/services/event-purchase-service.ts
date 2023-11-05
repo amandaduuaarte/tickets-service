@@ -52,7 +52,7 @@ export class EventPurchaseService implements EventPurchaseServiceInterface {
     try {
       await this.eventRepository.findEventById(eventId);
     } catch (err: any) {
-      console.error(`[EventPurchase-Service]: EventId is not found.`);
+      console.error(`[EventPurchase-Service]: EventId is not found.${eventId}`);
       throw new BadRequestException(err.message, BAD_REQUEST);
     }
   }
