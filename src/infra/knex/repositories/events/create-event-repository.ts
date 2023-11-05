@@ -3,7 +3,8 @@ import * as knexConnection from "../../../knex/config/knexfile";
 
 import { CreateEvent } from "@/domain/interfaces";
 import { CreateEventRepositoryInterface } from "@/domain/interfaces/repositories/create-event-repository";
-import { Connection } from "../../config";
+
+import { KnexConnectionFactory } from "@/main/factories/infra/knex/config/connection-factory";
 
 export class CreateEventRepository implements CreateEventRepositoryInterface {
   constructor() {}
@@ -24,7 +25,7 @@ export class CreateEventRepository implements CreateEventRepositoryInterface {
         front: data.front,
         vip: data.vip,
       };
-      const config = new Connection();
+      const config = KnexConnectionFactory();
       return await config
         .db("events")
         .insert(newRow)

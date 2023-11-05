@@ -1,7 +1,8 @@
 import { AuthServiceInterface } from "@/domain/interfaces";
 import { AuthService } from "@/domain/services";
-import { ConfigRepository } from "@/infra/knex/repositories/config/config-repository";
+
+import { ConfigRepositoryFactory } from "../../infra/knex/repositories/config/config-repository-factory";
 
 export const AuthServiceFactory = (): AuthServiceInterface => {
-  return new AuthService(new ConfigRepository());
+  return new AuthService(ConfigRepositoryFactory());
 };
