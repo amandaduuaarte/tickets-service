@@ -4,17 +4,14 @@ import { Connection } from "@/infra/knex/config/connection";
 
 import { eventPurchaseRouter, authRoute, createEventRouter } from "./routes";
 
-import { RabbitMQ } from "@/infra/rabbit/rabbitmq-config";
-
 dotenv.config();
 
 const app = express();
 const port = 3000;
 const connection = new Connection();
-const rabbitMq = new RabbitMQ();
+
 const router = express.Router();
 
-rabbitMq.createConnection();
 connection.validateConnection();
 
 app.use(express.json());

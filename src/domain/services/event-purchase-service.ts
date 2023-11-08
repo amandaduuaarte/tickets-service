@@ -27,7 +27,7 @@ export class EventPurchaseService implements EventPurchaseServiceInterface {
       }
 
       await this.validate(params);
-      const isInvalidEvent = await this.validateEventId(eventId);
+      await this.validateEventId(eventId);
 
       await this.fullTicketAvailability({ eventId, eventDetails });
       await this.ticketAvailabilityForArea({ eventId, eventDetails });
