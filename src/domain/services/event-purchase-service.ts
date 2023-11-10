@@ -4,13 +4,16 @@ import { EventPurchaseValidator } from "../schemas/event-purchase-schema";
 import { BAD_REQUEST } from "@/application/constants";
 import { EventRepository } from "@/infra/knex/repositories/events/events-repository";
 import { error, success } from "@/application/utils/http";
-import { RabbitMQConfig } from "../interfaces/rabbit/rabbitmq-config";
+
+import { RabbitMQConfigInterface } from "../interfaces/rabbit/rabbitmq-config";
 import { Responsebody } from "@/application/interfaces";
+import { SendEmailWorkerInterface } from "../interfaces/rabbit/workers/send-email-worker";
 
 export class EventPurchaseService implements EventPurchaseServiceInterface {
   constructor(
     readonly eventRepository: EventRepository,
-    readonly rabbitMQ: RabbitMQConfig,
+    readonly rabbitMQ: RabbitMQConfigInterface,
+    readonly sendEmailWorker: SendEmailWorkerInterface,
   ) {
     this.eventRepository = eventRepository;
     this.rabbitMQ = rabbitMQ;
@@ -25,6 +28,8 @@ export class EventPurchaseService implements EventPurchaseServiceInterface {
       }
 
       await this.validate(params);
+      await this.validateEventId(eventId);
+
       await this.fullTicketAvailability({ eventId, eventDetails });
       await this.ticketAvailabilityForArea({ eventId, eventDetails });
       await this.updateQuantity({ eventId, eventDetails });
@@ -36,13 +41,22 @@ export class EventPurchaseService implements EventPurchaseServiceInterface {
         email: params.contact.email,
         eventId: eventId,
       });
-
+      this.sendEmailWorker.consumerQueue("email-notification");
+      
       return success("Tudo certo com a sua compra! Em breve você recebera um email com o seu ingresso.");
     } catch (err: any) {
       return error(err.message);
     }
   }
 
+  async validateEventId(eventId: string): Promise<void> {
+    try {
+      await this.eventRepository.findEventById(eventId);
+    } catch (err: any) {
+      console.error(`[EventPurchase-Service]: EventId is not found.${eventId}`);
+      throw new BadRequestException(err.message, BAD_REQUEST);
+    }
+  }
   async validate(params: EventPurchase.EventPurchaseParams): Promise<void> {
     try {
       console.info(`[EventPurchase-Service]: Validating event purchase params.`);

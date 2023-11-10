@@ -1,14 +1,23 @@
 import { Channel, Connection, connect, Message } from "amqplib";
 
-import { RabbitMQConfig } from "@/domain/interfaces/rabbit/rabbitmq-config";
+import { RabbitMQConfigInterface } from "@/domain/interfaces/rabbit/rabbitmq-config";
 
-export class RabbitMQ implements RabbitMQConfig {
+export class RabbitMQ implements RabbitMQConfigInterface {
+  private static instace: RabbitMQ | null = null;
+
   private conn?: Connection;
   private channel?: Channel;
   private connectionActive: boolean = false;
 
   constructor() {
     this.createConnection();
+  }
+
+  static getInstance(): RabbitMQ {
+    if (RabbitMQ.instace === null) {
+      RabbitMQ.instace = new RabbitMQ();
+    }
+    return RabbitMQ.instace;
   }
 
   async createConnection(): Promise<void> {

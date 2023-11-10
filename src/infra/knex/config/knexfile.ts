@@ -13,4 +13,8 @@ module.exports = {
     min: 2,
     max: 10,
   },
+  migrations: {
+    extension: "ts",
+    directory: "src/infra/knex/config/src/migrations",
+  },
 } as Knex.Config;
