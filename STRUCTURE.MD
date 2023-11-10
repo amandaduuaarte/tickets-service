@@ -45,10 +45,10 @@ ___
     </br>
 
 - Infra: 👷‍♀️
-    -  A pasta de infra fica responsável por lidar com a parte de infraestrutura do projeto😅 então nela que está a parte de 'filas' com o `rabbit`, `knex` e toda a configuração do banco de dados também, além de tudo isso existe a parte de envio de email com o `resend`.
+    -  A pasta de infra fica responsável por lidar com a parte de infraestrutura do projeto😅 então nela que está a parte de 'filas' com o `rabbit`, `knex` e toda a configuração do banco de dados também, além de tudo isso existe a parte de envio de email com o `nodemailer`.
     -  Essa camada sempre entendi como algo mais externo do core da aplicação então dependências fora do projeto estão ai, também tentei isolar um pouco mais essa parte visando uma maior facilidade caso seja necessário trocar alguma das libs usadas. Ps: Nisso o factory também é de grande ajuda.
     - infra 
         - `./knex`
         - `./rabbit`
-        - `./resend`
+        - `./nodemailer`
     </br>

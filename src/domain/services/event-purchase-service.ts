@@ -6,13 +6,13 @@ import { EventRepository } from "@/infra/knex/repositories/events/events-reposit
 import { error, success } from "@/application/utils/http";
 import { RabbitMQConfigInterface } from "../interfaces/rabbit/rabbitmq-config";
 import { Responsebody } from "@/application/interfaces";
-import { SendEmailWorker } from "@/infra/rabbit/workers/send-email-worker";
+import { SendEmailWorkerInterface } from "../interfaces/rabbit/workers/send-email-worker";
 
 export class EventPurchaseService implements EventPurchaseServiceInterface {
   constructor(
     readonly eventRepository: EventRepository,
     readonly rabbitMQ: RabbitMQConfigInterface,
-    readonly sendEmailWorker: SendEmailWorker,
+    readonly sendEmailWorker: SendEmailWorkerInterface,
   ) {
     this.eventRepository = eventRepository;
     this.rabbitMQ = rabbitMQ;
