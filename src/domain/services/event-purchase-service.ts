@@ -4,6 +4,7 @@ import { EventPurchaseValidator } from "../schemas/event-purchase-schema";
 import { BAD_REQUEST } from "@/application/constants";
 import { EventRepository } from "@/infra/knex/repositories/events/events-repository";
 import { error, success } from "@/application/utils/http";
+
 import { RabbitMQConfigInterface } from "../interfaces/rabbit/rabbitmq-config";
 import { Responsebody } from "@/application/interfaces";
 import { SendEmailWorkerInterface } from "../interfaces/rabbit/workers/send-email-worker";
@@ -41,7 +42,7 @@ export class EventPurchaseService implements EventPurchaseServiceInterface {
         eventId: eventId,
       });
       this.sendEmailWorker.consumerQueue("email-notification");
-
+      
       return success("Tudo certo com a sua compra! Em breve você recebera um email com o seu ingresso.");
     } catch (err: any) {
       return error(err.message);
