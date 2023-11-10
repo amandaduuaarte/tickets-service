@@ -3,7 +3,7 @@ import { Channel, Connection, connect, Message } from "amqplib";
 import { RabbitMQConfigInterface } from "@/domain/interfaces/rabbit/rabbitmq-config";
 
 export class RabbitMQ implements RabbitMQConfigInterface {
-  private static instace: RabbitMQ | null = null;
+  private static _instace: RabbitMQ | null = null;
 
   private conn?: Connection;
   private channel?: Channel;
@@ -13,11 +13,11 @@ export class RabbitMQ implements RabbitMQConfigInterface {
     this.createConnection();
   }
 
-  static getInstance(): RabbitMQ {
-    if (RabbitMQ.instace === null) {
-      RabbitMQ.instace = new RabbitMQ();
+  static get instance(): RabbitMQ {
+    if (RabbitMQ._instace === null) {
+      RabbitMQ._instace = new RabbitMQ();
     }
-    return RabbitMQ.instace;
+    return RabbitMQ._instace;
   }
 
   async createConnection(): Promise<void> {
