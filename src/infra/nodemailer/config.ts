@@ -1,6 +1,7 @@
+import { NodemailerInterface } from "@/application/interfaces/nodemailer";
 import nodemailer from "nodemailer";
 
-export class Nodemailer {
+export class Nodemailer implements NodemailerInterface {
   constructor() {}
 
   config() {

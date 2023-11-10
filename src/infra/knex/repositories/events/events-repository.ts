@@ -1,12 +1,25 @@
 import { EventRepositoryInterface, findQuantityByAreaReturn, findQuantityByEventIdReturn } from "@/domain/interfaces/repositories";
-import { Connection } from "../../config";
+
+import { BadRequestException } from "@/application/errors/errorExpection";
+import { BAD_REQUEST } from "@/application/constants";
+import { KnexConnectionFactory } from "@/main/factories/infra/knex/config/connection-factory";
 
 export class EventRepository implements EventRepositoryInterface {
+  async findEventById(eventId: string): Promise<void> {
+    const bdName = `events`;
+    const config = KnexConnectionFactory();
+    const content = await config.db(bdName).where("title", eventId);
+
+    if (content.length <= 0) {
+      console.error(`[Event-findQuantityByEventId-Repository]: Event not found ${eventId}`);
+      throw new BadRequestException("O evento não pode ser validado.", BAD_REQUEST);
+    }
+  }
   async findQuantityByEventId(eventId: string): Promise<findQuantityByEventIdReturn> {
     try {
-      const bdName = `event_${eventId}`;
-      const config = new Connection();
-      const content = await config.db(bdName).select("tickets_quantity", "event_config");
+      const bdName = `events`;
+      const config = KnexConnectionFactory();
+      const content = await config.db(bdName).where("title", eventId).select("tickets_quantity", "event_config");
       return content[0];
     } catch (error: any) {
       console.error(`[Event-findQuantityByEventId-Repository]: ${error.message}`);
@@ -16,9 +29,9 @@ export class EventRepository implements EventRepositoryInterface {
 
   async findQuantityByArea(eventId: string, area: string): Promise<findQuantityByAreaReturn> {
     try {
-      const bdName = `event_${eventId}`;
-      const config = new Connection();
-      const content = await config.db(bdName).select(area);
+      const bdName = `events`;
+      const config = KnexConnectionFactory();
+      const content = await config.db(bdName).where("title", eventId).select(area);
       return content[0];
     } catch (error: any) {
       console.error(`[Event-findQuantityByEventId-Repository]: ${error.message}`);
@@ -26,7 +39,7 @@ export class EventRepository implements EventRepositoryInterface {
     }
   }
 
-  async ticketBooking(eventId: string, eventDetails: { area: string; quantity: number }) {
+  async ticketBooking(eventId: string, eventDetails: { area: string; quantity: number }): Promise<void> {
     try {
       console.info(`[Event-ticketBooking-Repository]: Starting to update quantity by area.`);
       this.quantityForArea(eventId, eventDetails);
@@ -39,10 +52,10 @@ export class EventRepository implements EventRepositoryInterface {
     }
   }
 
-  private async quantityTotal(eventId: string, quantity: number) {
-    const bdName = `event_${eventId}`;
-    const config = new Connection().db(bdName);
-    const currentQuantity: any = await config.select("tickets_quantity");
+  async quantityTotal(eventId: string, quantity: number): Promise<void> {
+    const bdName = "events";
+    const config = KnexConnectionFactory().db(bdName);
+    const currentQuantity: any = await config.where("title", eventId).select("tickets_quantity");
     const newTotalQuantity = Number(currentQuantity[0].tickets_quantity - quantity);
     await config.update({
       ["tickets_quantity"]: newTotalQuantity,
@@ -50,12 +63,12 @@ export class EventRepository implements EventRepositoryInterface {
     console.info(`[Event-quantityTotal-Repository]: Total quantity updated with successfully.`);
   }
 
-  private async quantityForArea(eventId: string, eventDetails: { area: string; quantity: number }) {
+  async quantityForArea(eventId: string, eventDetails: { area: string; quantity: number }): Promise<void> {
     try {
-      const bdName = `event_${eventId}`;
-      const config = new Connection().db(bdName);
+      const bdName = "events";
+      const config = KnexConnectionFactory().db(bdName);
       const area = eventDetails.area;
-      const currentQuantity: any = await config.select(eventDetails.area);
+      const currentQuantity: any = await config.where("title", eventId).select(eventDetails.area);
 
       const newTotalQuantity = Number(currentQuantity[0][area] - eventDetails.quantity);
 

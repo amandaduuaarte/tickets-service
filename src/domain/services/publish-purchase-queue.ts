@@ -1,9 +1,9 @@
 import { BadRequestException } from "@/application/errors/errorExpection";
-import { RabbitMQConfig } from "../interfaces/rabbit/rabbitmq-config";
+import { RabbitMQConfigInterface } from "../interfaces/rabbit/rabbitmq-config";
 import { BAD_REQUEST } from "@/application/constants";
 
 export class PublishPurchaseQueue {
-  constructor(readonly rabbitMQ: RabbitMQConfig) {
+  constructor(readonly rabbitMQ: RabbitMQConfigInterface) {
     this.rabbitMQ = rabbitMQ;
   }
 
