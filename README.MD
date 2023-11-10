@@ -73,12 +73,3 @@ payload: client-token
  </br>
  3 - `yarn debug:watch`
 
-
-### Padroes de projeto implementados: 
-* Factory
-* Adpater
-
-## Quero implementar 
-* O singleton => é usado para criar uma unica instancia de uma determinada classe e 
-fornecer um ponto global de acesso a ela. (Usado em recursos compartilhados: acesso a dbs)
-    * Gostaria de implementar ele no rabbit e no db (para que eu só tenha uma instacia dessas classes)
