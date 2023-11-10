@@ -17,7 +17,7 @@ MicroServiço de validação de compras de ingressos para eventos, o projeto con
 * Nodemailer -> Usado para auxilixar no envio de email.
 * Yup -> Validação dos parâmetros recebidos em rota, usado como uma camada a mais.
 * Docker -> Para a criação do banco usado na aplicação e também de toda a infra do rabbitmq.
-* Eslint e Prettie -> Para organização e formatação de código.
+* Eslint e Prettier -> Para organização e formatação de código.
 
 ### Estrutura do projeto e decisoes tomadas: 
 - [Como o projeto está estruturado?](./STRUCTURE.MD) eu explico um pouco da estrutura do projeto com o objetivo de tornar clara e simples a forma que a aplicação está estruturada, falando um pouco sobre decisoes
