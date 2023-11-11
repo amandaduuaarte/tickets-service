@@ -1,13 +1,14 @@
 import * as amqp from "amqplib";
 
 import { MailOptions, SendEmailWorkerInterface } from "@/domain/interfaces/rabbit/workers/send-email-worker";
-import { Nodemailer } from "@/infra/nodemailer/config";
+
 import { BadRequestException } from "@/application/errors/errorExpection";
 import { BAD_REQUEST } from "@/application/constants";
+import { ResendConfig } from "@/infra/resend/config";
 
 export class SendEmailWorker implements SendEmailWorkerInterface {
-  constructor(private readonly nodemail: Nodemailer) {
-    this.nodemail = nodemail;
+  constructor(private readonly resend: ResendConfig) {
+    this.resend = resend;
   }
 
   async consumerQueue(queue: string): Promise<void> {
@@ -23,7 +24,7 @@ export class SendEmailWorker implements SendEmailWorkerInterface {
           const content = JSON.parse(message.content.toString());
           console.info("[SendEmailWorker]: Message received at worker:", content);
           const sendEmailData = {
-            from: env.EMAIL_USER || "ticketsnodemailerservice@zohomail.com",
+            from: "onboarding@resend.dev",
             to: content.email,
             subject: "Tickets-Service",
             html: `<h2> Compra realizada!</h2>
@@ -49,14 +50,14 @@ export class SendEmailWorker implements SendEmailWorkerInterface {
         throw new BadRequestException("Os parametros devem ser enviados.", BAD_REQUEST);
       }
 
-      this.nodemail.config().sendMail(data, (error, info) => {
-        if (error) {
-          console.error(`[SendEmailWorker]: Error sending email`, error);
-        } else {
-          console.info(info.toString());
+      this.resend
+        .config(data)
+        .then(() => {
           console.info(`[SendEmailWorker]: Successful email sending`);
-        }
-      });
+        })
+        .catch((error: any) => {
+          console.error(`[SendEmailWorker]: Error sending email`, error);
+        });
     } catch (err: any) {
       throw new BadRequestException("Ocorreu um erro no envio do e-mail.", BAD_REQUEST);
     }
