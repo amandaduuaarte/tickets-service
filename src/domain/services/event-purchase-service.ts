@@ -42,7 +42,7 @@ export class EventPurchaseService implements EventPurchaseServiceInterface {
         eventId: eventId,
       });
       this.sendEmailWorker.consumerQueue("email-notification");
-      
+
       return success("Tudo certo com a sua compra! Em breve você recebera um email com o seu ingresso.");
     } catch (err: any) {
       return error(err.message);
