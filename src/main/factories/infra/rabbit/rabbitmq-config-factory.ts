@@ -2,5 +2,5 @@ import { RabbitMQConfigInterface } from "@/domain/interfaces/rabbit/rabbitmq-con
 import { RabbitMQ } from "@/infra/rabbit/rabbitmq-config";
 
 export const RabbitMQFactory = (): RabbitMQConfigInterface => {
-  return RabbitMQ.getInstance();
+  return RabbitMQ.instance;
 };
