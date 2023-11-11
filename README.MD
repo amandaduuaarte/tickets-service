@@ -14,7 +14,7 @@ MicroServiço de validação de compras de ingressos para eventos, o projeto con
 * TypeScript.
 * Express -> usado como web application framework para a criação do projeto.
 * RabbitMQ -> Para a realização de comunicação assíncrona, simulando o consumo de outro MS das mensagens em fila para que houvesse o disparo de email.
-* Nodemailer -> Usado para auxilixar no envio de email.
+* Resend -> Usado para auxilixar no envio de email.
 * Yup -> Validação dos parâmetros recebidos em rota, usado como uma camada a mais.
 * Docker -> Para a criação do banco usado na aplicação e também de toda a infra do rabbitmq.
 * Eslint e Prettier -> Para organização e formatação de código.
